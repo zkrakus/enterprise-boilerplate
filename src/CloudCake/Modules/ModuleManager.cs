@@ -1,5 +1,9 @@
 ﻿using CloudCake.Dependency;
-using Microsoft.Extensions.Logging.Abstractions;
+using CloudCake.Plugins;
+using System.Collections.Immutable;
+using Castle.Core.Logging;
+using CloudCake.Exceptions;
+using CloudCake.Collections.Extensions;
 
 namespace CloudCake.Modules;
 
@@ -12,17 +16,17 @@ public class ModuleManager : IModuleManager
 
     public IReadOnlyList<ModuleInfo> Modules => _modules.ToImmutableList();
 
-    public ILogger Logger { get; set; }
+    public Castle.Core.Logging.ILogger Logger { get; set; }
 
     private ModuleCollection _modules;
 
     private readonly IIocManager _iocManager;
-    private readonly IPluginManager _plugInManager;
+    private readonly IPluginManager _pluginManager;
 
-    public AbpModuleManager(IIocManager iocManager, IPluginManager plugInManager)
+    public ModuleManager(IIocManager iocManager, IPluginManager plugInManager)
     {
         _iocManager = iocManager;
-        _plugInManager = plugInManager;
+        _pluginManager = plugInManager;
 
         Logger = NullLogger.Instance;
     }
@@ -78,7 +82,7 @@ public class ModuleManager : IModuleManager
 
         var modules = Module.FindDependedModuleTypesRecursivelyIncludingGivenModule(_modules.StartupModuleType);
 
-        foreach (var plugInModuleType in _plugInManager.PlugInSources.GetAllModules())
+        foreach (var plugInModuleType in _pluginManager.PlugInSources.GetAllModules())
         {
             if (modules.AddIfNotContains(plugInModuleType))
             {
@@ -96,7 +100,7 @@ public class ModuleManager : IModuleManager
             var moduleObject = _iocManager.Resolve(moduleType) as Module;
             if (moduleObject == null)
             {
-                throw new AbpInitializationException("This type is not an ABP module: " + moduleType.AssemblyQualifiedName);
+                throw new CloudCakeInitializationException("This type is not an ABP module: " + moduleType.AssemblyQualifiedName);
             }
 
             moduleObject.IocManager = _iocManager;
@@ -135,7 +139,7 @@ public class ModuleManager : IModuleManager
                 var dependedModuleInfo = _modules.FirstOrDefault(m => m.Type == dependedModuleType);
                 if (dependedModuleInfo == null)
                 {
-                    throw new AbpInitializationException("Could not find a depended module " + dependedModuleType.AssemblyQualifiedName + " for " + moduleInfo.Type.AssemblyQualifiedName);
+                    throw new InitializationException("Could not find a depended module " + dependedModuleType.AssemblyQualifiedName + " for " + moduleInfo.Type.AssemblyQualifiedName);
                 }
 
                 if ((moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null))

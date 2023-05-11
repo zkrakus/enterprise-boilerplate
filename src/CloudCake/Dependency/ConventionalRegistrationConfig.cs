@@ -1,4 +1,6 @@
-﻿namespace CloudCake.Dependency;
+﻿using CloudCake.Configuration;
+
+namespace CloudCake.Dependency;
 
 /// <summary>
 /// This class is used to pass configuration/options while registering classes in conventional way.

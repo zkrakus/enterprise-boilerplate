@@ -1,5 +1,7 @@
-﻿using CloudCake.Configuration.Startup;
+﻿using CloudCake.Collections.Extensions;
+using CloudCake.Configuration.Startup;
 using CloudCake.Dependency;
+using CloudCake.Exceptions;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Reflection;
 
@@ -18,12 +20,12 @@ public abstract class Module
     /// <summary>
     /// Gets a reference to the IOC manager.
     /// </summary>
-    protected internal IIocManager IocManager { get; internal set; }
+    protected internal IIocManager? IocManager { get; internal set; }
 
     /// <summary>
     /// Gets a reference to the CloudCake configuration.
     /// </summary>
-    protected internal IStartupConfiguration Configuration { get; internal set; }
+    protected internal IStartupConfiguration? Configuration { get; internal set; }
 
     /// <summary>
     /// Gets or sets the logger.
@@ -39,34 +41,22 @@ public abstract class Module
     /// This is the first event called on application startup.
     /// Codes can be placed here to run before dependency injection registrations.
     /// </summary>
-    public virtual void PreInitialize()
-    {
-
-    }
+    public abstract void PreInitialize();
 
     /// <summary>
     /// This method is used to register dependencies for this module.
     /// </summary>
-    public virtual void Initialize()
-    {
-
-    }
+    public abstract void Initialize();
 
     /// <summary>
     /// This method is called lastly on application startup.
     /// </summary>
-    public virtual void PostInitialize()
-    {
-
-    }
+    public abstract void PostInitialize();
 
     /// <summary>
     /// This method is called when the application is being shutdown.
     /// </summary>
-    public virtual void Shutdown()
-    {
-
-    }
+    public abstract void Shutdown();
 
     public virtual Assembly[] GetAdditionalAssemblies()
     {
@@ -94,7 +84,7 @@ public abstract class Module
     {
         if (!IsAbpModule(moduleType))
         {
-            throw new AbpInitializationException("This type is not an ABP module: " + moduleType.AssemblyQualifiedName);
+            throw new CloudCakeInitializationException("This type is not an ABP module: " + moduleType.AssemblyQualifiedName);
         }
 
         var list = new List<Type>();
@@ -118,7 +108,7 @@ public abstract class Module
     {
         var list = new List<Type>();
         AddModuleAndDependenciesRecursively(list, moduleType);
-        list.AddIfNotContains(typeof(AbpKernelModule));
+        list.AddIfNotContains(typeof(KernelModule));
         return list;
     }
 
@@ -126,7 +116,7 @@ public abstract class Module
     {
         if (!IsAbpModule(module))
         {
-            throw new AbpInitializationException("This type is not an ABP module: " + module.AssemblyQualifiedName);
+            throw new CloudCakeInitializationException("This type is not an ABP module: " + module.AssemblyQualifiedName);
         }
 
         if (modules.Contains(module))

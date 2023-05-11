@@ -210,7 +210,7 @@ public static class StringExtensions
     /// <param name="str">The string.</param>
     /// <param name="preFixes">one or more prefix.</param>
     /// <returns>Modified string or the same string if it has not any of given prefixes</returns>
-    public static string RemovePreFix(this string str, params string[] preFixes)
+    public static string? RemovePreFix(this string str, params string[] preFixes)
     {
         if (str == null)
         {
@@ -466,7 +466,7 @@ public static class StringExtensions
     /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    public static string Truncate(this string str, int maxLength)
+    public static string? Truncate(this string str, int maxLength)
     {
         if (str == null)
         {
@@ -487,7 +487,7 @@ public static class StringExtensions
     /// Returning string can not be longer than maxLength.
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    public static string TruncateWithPostfix(this string str, int maxLength)
+    public static string? TruncateWithPostfix(this string str, int maxLength)
     {
         return TruncateWithPostfix(str, maxLength, "...");
     }
@@ -498,7 +498,7 @@ public static class StringExtensions
     /// Returning string can not be longer than maxLength.
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    public static string TruncateWithPostfix(this string str, int maxLength, string postfix)
+    public static string? TruncateWithPostfix(this string str, int maxLength, string postfix)
     {
         if (str == null)
         {

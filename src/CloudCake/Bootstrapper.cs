@@ -42,7 +42,7 @@ public class Bootstrapper : IDisposable
     /// </summary>
     protected bool IsDisposed;
 
-    private ModuleManager _moduleManager;
+    private ModuleManager? _moduleManager;
     private ILogger _logger;
 
     /// <summary>

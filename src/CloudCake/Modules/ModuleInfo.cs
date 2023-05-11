@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using CloudCake.Exceptions;
 
 namespace CloudCake.Modules;
 
@@ -38,8 +39,8 @@ public class ModuleInfo
     /// </summary>
     public ModuleInfo([NotNull] Type type, [NotNull] Module instance, bool isLoadedAsPlugIn)
     {
-        Check.NotNull(type, nameof(type));
-        Check.NotNull(instance, nameof(instance));
+        CheckOrThrow.NotNull(type, nameof(type));
+        CheckOrThrow.NotNull(instance, nameof(instance));
 
         Type = type;
         Instance = instance;
@@ -49,7 +50,7 @@ public class ModuleInfo
         Dependencies = new List<ModuleInfo>();
     }
 
-    public override string ToString()
+    public override string? ToString()
     {
         return Type.AssemblyQualifiedName ??
                Type.FullName;

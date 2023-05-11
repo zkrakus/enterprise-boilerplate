@@ -5,7 +5,7 @@ using Castle.Windsor;
 
 namespace CloudCake.Dependency.Installers;
 
-internal class AbpCoreInstaller : IWindsorInstaller
+internal class CoreInstaller : IWindsorInstaller
 {
     public void Install(IWindsorContainer container, IConfigurationStore store)
     {
